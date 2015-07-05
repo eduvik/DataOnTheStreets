@@ -46,16 +46,17 @@
     <meta charset="UTF-8">
     <title></title>
 </head>
-  <body onload="init()">
-  <div>
-      You are currently at {{ current_location }}. The direction of the nearest {{ utility }} is pointed below.
+  <body onload="init()" style="background:  url('/static/{{ utility }}.png') no-repeat center center fixed; background-size: cover;">
+  <div style="font-family: Helvetica Neue, Helvetica, Segoe UI, Arial, freesans, sans-serif">
+      You are currently at {{ current_location }}.
+      <br>
+      The direction of the nearest {{ utility }} is pointed below.
   </div>
     <div id="compassContainer">
       <img src="{{ url_for("static", filename="compass.png") }}" id="compass"/>
     </div>
 
     <div class="utility">
-  <img src="/static/{{ utility }}.png" class="utility_icon" id={{ utility }} alt="{{ utility }}">
         </div>
 
 </body>
