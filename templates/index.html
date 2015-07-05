@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body>
+<div class="row">
+{% for utility in utilities %}
+<div class="col-sm-6 utility" id="{{ utility }}">
+    <a href="/{{ utility }}/">
+        <img src="static/{{ utility }}.png" alt="{{ utility }}" style="width: 100%">
+    </a>
+</div>
+{% endfor %}
+</div>
+<script>
+    var lat;
+    var long;
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(set_vars);
+        } else {
+            body.innerHTML = "Geolocation is not supported by this browser, or has been disabled.";
+        }
+    }
+    function set_vars(position) {
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+        $( ".utility").find("a").each(function()
+        {
+            this.href = this.href + lat + "," + long;
+        })
+    }
+
+$( getLocation );
+</script>
+</body>
+</html>

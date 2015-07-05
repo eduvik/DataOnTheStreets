@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+      #compass{
+        width:100%;
+        transform-origin: 50% 50%;
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+      }
+        .utility .utility_icon {
+            width: 100%;
+        }
+    </style>
+        <script>
+      function init() {
+        var compass = document.getElementById('compass');
+        if(window.DeviceOrientationEvent) {
+
+          window.addEventListener('deviceorientation', function(event) {
+                var alpha;
+                //Check for iOS property
+                if(event.webkitCompassHeading) {
+                  alpha = event.webkitCompassHeading + {{ direction }};
+                  //Rotation is reversed for iOS
+                  compass.style.WebkitTransform = 'rotate(-' + alpha + 'deg)';
+                }
+                //non iOS
+                else {
+                  alpha = event.alpha + {{ direction }};
+                  webkitAlpha = alpha;
+                  if(!window.chrome) {
+                    //Assume Android stock (this is crude, but good enough for our example) and apply offset
+                    webkitAlpha = alpha-270;
+                  }
+                }
+
+                compass.style.Transform = 'rotate(' + alpha + 'deg)';
+                compass.style.WebkitTransform = 'rotate('+ webkitAlpha + 'deg)';
+                //Rotation is reversed for FF
+                compass.style.MozTransform = 'rotate(-' + alpha + 'deg)';
+              }, false);
+        }
+      }
+    </script>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+  <body onload="init()">
+  <div>
+      You are currently at {{ current_location }}. The direction of the nearest {{ utility }} is pointed below.
+  </div>
+    <div id="compassContainer">
+      <img src="{{ url_for("static", filename="compass.png") }}" id="compass"/>
+    </div>
+
+    <div class="utility">
+  <img src="/static/{{ utility }}.png" class="utility_icon" id={{ utility }} alt="{{ utility }}">
+        </div>
+
+</body>
+</html>
