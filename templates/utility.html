@@ -12,6 +12,9 @@
             width: 100%;
         }
     </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script>
       function init() {
         var compass = document.getElementById('compass');
@@ -47,17 +50,15 @@
     <title></title>
 </head>
   <body onload="init()" style="background:  url('/static/{{ utility }}.png') no-repeat center center fixed; background-size: cover;">
-  <div style="font-family: Helvetica Neue, Helvetica, Segoe UI, Arial, freesans, sans-serif; font-size: large; text-align: center;">
-      You are currently at {{ current_location }}.
-      <br>
-      The direction of the nearest {{ utility }} is pointed below.
-  </div>
     <div id="compassContainer">
       <img src="{{ url_for("static", filename="compass.png") }}" id="compass"/>
     </div>
 
-    <div class="utility">
-        </div>
+  <div style="font-size: 5vh; text-align: center;">
+      You are currently at {{ current_location }}.
+      <br>
+      The arrow is pointing to the nearest {{ utility }}.
+  </div>
 
 </body>
 </html>
