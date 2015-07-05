@@ -26,25 +26,31 @@ def get_human_readable_address(lat, long):
     return int_location
 
 
-def find_object(coord, utility_type, utility_data_filename=data_file, gmaps=gmaps, utility_name_map={"water": "drinking fountain", "toilet": "toilet", "food":"food", "shelter":"shelter"}):
+def find_object(coord, utility_type="", utility_data_filename=data_file, gmaps=gmaps):
     class FoundObject(object):
         def __init__(self, asset, dist, address):
             self.distance = dist
-            self.name = asset[5]
-            self.location = asset[8]
+            if "DESCRIPTION" in asset.keys():
+                self.name = asset["DESCRIPTION"]
+            elif "Description" in asset.keys():
+                self.name = asset["Description"]
             self.address = address
-    utility_data = csv.reader(open(utility_data_filename), delimiter=',', lineterminator="\n")
+    utility_data = csv.DictReader(open(utility_data_filename), delimiter=',', lineterminator="\n")
     top_match = []
     best_match = [None, 9999999999]
 
     origin_address = str(coord[0]) + "," + str(coord[1])
 
     for asset in utility_data:
-        if asset != "" and utility_name_map[utility_type] in asset[3].lower():
-            destination_address = asset[12].strip("(").strip(")")
+        if asset != "" and (not utility_type or utility_type.lower() in asset[3].lower()):
+            if "Co-ordinates" in asset.keys():
+                coord = asset["Co-ordinates"]
+            elif "Geometry" in asset.keys():
+                coord = asset["Geometry"]
+            destination_address = coord.strip("(").strip(")")
 
-            lat_diff = abs(float(destination_address.split(", ")[0])-float(coord[1]))
-            lng_diff = abs(float(destination_address.split(", ")[1])-float(coord[0]))
+            lat_diff = abs(float(destination_address.split(", ")[0])-float(eval(coord)[1]))
+            lng_diff = abs(float(destination_address.split(", ")[1])-float(eval(coord)[0]))
             trig_distance = (lat_diff**2 + lng_diff**2)**0.5
 
             FoundAsset = FoundObject(asset, trig_distance, destination_address)
@@ -71,7 +77,7 @@ def find_object(coord, utility_type, utility_data_filename=data_file, gmaps=gmap
 
         if float(distance) < float(best_match[1]):
             best_match[1] = distance
-            best_match[0] = [match.name, match.location, match.address]
+            best_match[0] = [match.name, match.address]
 
     return best_match
 
